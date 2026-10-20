@@ -9,11 +9,11 @@ workflows:
       flutter: stable
     scripts:
       - name: 安装依赖
-        command: flutter pub get
+        script: flutter pub get
       - name: 构建 release（不签名）
-        command: flutter build ios --release --no-codesign
+        script: flutter build ios --release --no-codesign
       - name: 打包 IPA
-        command: |
+        script: |
           cd build/ios/iphoneos
           mkdir -p Payload
           cp -r Runner.app Payload/
