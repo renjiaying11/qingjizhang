@@ -1,0 +1,22 @@
+# Codemagic 构建配置：产出未签名 IPA，交给 Sideloadly 用免费 Apple ID 重签安装
+# 用法：项目推到 GitHub 后，在 codemagic.io 添加 App，选择此仓库，点 Start build
+workflows:
+  ios-sideload:
+    name: iOS IPA (Sideloadly 重签用)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      flutter: stable
+    scripts:
+      - name: 安装依赖
+        command: flutter pub get
+      - name: 构建 release（不签名）
+        command: flutter build ios --release --no-codesign
+      - name: 打包 IPA
+        command: |
+          cd build/ios/iphoneos
+          mkdir -p Payload
+          cp -r Runner.app Payload/
+          zip -q -r qingjizhang.ipa Payload
+    artifacts:
+      - build/ios/iphoneos/qingjizhang.ipa
